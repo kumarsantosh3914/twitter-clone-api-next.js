@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  email    String @unique
+  password String
+  tweets   Tweets[]
+}
+
+model Tweets {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  tweet       String
+  createdDate DateTime @default(now())
+  updatedDate DateTime @updatedAt 
+  User        User     @relation(fields: [userId], references: [id])
+  userId      String   @db.ObjectId
+}
